@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+
+ nginx-service:
+  build: ./requirements/nginx
+  image: nginx-image
+  ports:
+      - "443:443"
