@@ -1,0 +1,63 @@
+version: '3.3'
+
+services:
+ 
+ mysql:
+  build: ./requirements/mariadb
+  image: mariadb-image-test
+  restart: always
+  networks:
+      -  inception_network
+  volumes:
+      - dbdata:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: mysql_root_pass
+   MYSQL_DATABASE: wordpress_database
+   MYSQL_USER: wordpress_user
+   MYSQL_PASSWORD: password
+
+ wordpress:
+  build: ./requirements/wordpress
+  image: wordpress-image
+  volumes:
+    - dbhtml:/var/www/html
+  depends_on:
+    - mysql
+  links:
+   - mysql
+  restart: always
+  networks:
+      -  inception_network
+ nginx:
+  build: ./requirements/nginx
+  image: nginx
+  volumes:
+      - dbnginx:/etc/nginx/
+      - dbhtml:/var/www/html
+  ports:
+      - 8080:443
+  links:
+    - wordpress 
+
+networks:
+ inception_network:
+
+volumes:
+ dbdata:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/Users/jacher/data/mysql'
+ dbnginx:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/Users/jacher/data/nginx'
+ dbhtml:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/Users/jacher/data/html'

@@ -1,9 +1,42 @@
-version: '3.1'
+version: '3.3'
 
 services:
-
+ 
  nginx-service:
   build: ./requirements/nginx
   image: nginx-image
+  restart: on-failure
   ports:
       - "443:443"
+  networks:
+      -  inception_network
+  volumes:
+      - test_volume:/test_volumes
+  
+ mariadb-service:
+  build: ./requirements/mariadb
+  image: mariadb-image
+  restart: on-failure
+  depends_on: 
+    - nginx-service
+  networks:
+      -  inception_network
+  volumes:
+      - test_volume:/test_volumes
+
+ wordpress-service:
+  build: ./requirements/wordpress
+  image: wordpress-image
+  restart: on-failure
+  depends_on: 
+    - nginx-service
+  networks:
+      -  inception_network
+  volumes:
+      - test_volume:/test_volumes
+
+networks:
+ inception_network:
+
+volumes:
+ test_volume:

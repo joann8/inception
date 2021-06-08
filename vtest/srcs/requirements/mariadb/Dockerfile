@@ -9,4 +9,10 @@ EXPOSE 3306
 LABEL version="1.0"
 LABEL description="MariaDB Server"
 
+RUN userdel mysql
+RUN useradd -u 999 mysql
+RUN mkdir -p /data/mysql
+RUN chown -R mysql:mysql  /data/mysql
+
+
 CMD ["mysqld"]

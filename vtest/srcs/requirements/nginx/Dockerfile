@@ -23,10 +23,6 @@ RUN openssl req -newkey rsa:4096 -x509 -sha256 \
 	-subj "/C=FR/ST=Valdoise/L=Margency/O=Pineapple_inc/OU=IT/CN=localhost"
 #------------------------end
 
-
-RUN mkdir -p /test_volumes
-RUN touch hello /test_volumes/
-
 ENTRYPOINT ["dumb-init", "--"]
 
 EXPOSE 443
