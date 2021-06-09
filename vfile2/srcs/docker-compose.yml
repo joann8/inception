@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+ 
+ db-service:
+  build: ./requirements/mariadb
+  image: my-mariadb-image
+  container_name: db
+  restart: unless-stopped
+  env_file: .env
+  environment:
+      - MYSQL_DATABASE=wordpress
+  volumes:
+      - dbdata:/var/lib/mysql
+  networks:
+      -  inception_network
+ 
+ wordpress-service:
+  depends_on:
+      - db-service
+  build: ./requirements/wordpress
+  image: my-wordpress-image
+  container_name: wordpress
+  restart: unless-stopped
+  env_file: .env
+  environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=wordpress
+  volumes:
+      - wp_static:/www/
+  networks:
+      - inception_network
+
+ nginx-service:
+  depends_on:
+      - wordpress-service
+  build: ./requirements/nginx
+  image: my-nginx-image
+  container_name: nginx
+  restart: unless-stopped
+  ports:
+      - "443:443"
+  networks:
+      -  inception_network
+  volumes:
+      - wp_static:/www/
+
+volumes:
+ wp_static:
+     driver: local
+     driver_opts:
+         type: 'none'
+         o: 'bind'
+         device: '/Users/jacher/data/wp_static'
+ dbdata:
+     driver: local
+     driver_opts:
+         type: 'none'
+         o: 'bind'
+         device: '/Users/jacher/data/dbdata'
+     
+networks:
+ inception_network:
+     driver: bridge
+
+
