@@ -7,26 +7,17 @@ RUN apt-get update
 
 RUN apt install -y \
 	php7.3-fpm \
-	php7.3-common \
 	hp7.3-mysql \
-	php7.3-gmp \
-	php7.3-curl \
-	php7.3-intl \
-	php7.3-mbstring \
-	php7.3-xmlrpc \
-	php7.3-gd \
-	php7.3-xml \
-	php7.3-cli \
-	php7.3-zip \
-	php7.3-soap \
-	php7.3-imap
-RUN apt install sudo
-RUN mkdir -p /www
-RUN chown -R www-data:www-data /www
-RUN chmod -R 755 /www
-RUN chmod +x ./init_setup/wp_setup.sh
-RUN rm /etc/php/7.3/fpm/pool.d/www.conf && mv /init_container/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+	curl \
+	dumb-init
 
-ENTRYPOINT ./init_setup/wp_setup.sh
+RUN echo "listen = 9000" >> /etc/php/7.3/fpm/pool.d/www.conf
+
+RUN curl -LO https://wordpress.org/latest.tar.gz \
+		&& tar xzvf latest.tar.gz
+
+ENTRYPOINT ["usr/bin/dumb-init"]
 
 EXPOSE 9000
+
+CMD ["bash", "./init_setup/wp_setup.sh"]

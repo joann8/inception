@@ -1,19 +1,10 @@
 FROM debian:buster
 
 ADD conf/ init_container/
-ADD tools/ init_setup/
 
-RUN apt-get update && apt-get -y install -y wget nginx 
-RUN apt-get install -y openssl
-RUN apt-get install -y dumb-init 
+RUN apt-get update && apt-get install -y wget nginx openssl dumb-init 
 
-RUN adduser --disabled-password 'www'
-RUN mkdir www
-RUN chown -R www:www /var/lib/nginx
-RUN chown -R www:www /www
-RUN mkdir -p /run/nginx
-RUN mv ./init_container/nginx.conf ./etc/nginx/nginx.conf
-
+RUN mv ./init_container/nginx.conf ./etc/nginx/
 
 #---SSL Certificate settings
 RUN mkdir -p /etc/nginx/ssl
@@ -22,6 +13,8 @@ RUN openssl req -newkey rsa:4096 -x509 -sha256 \
 	-nodes -days 365 \
 	-subj "/C=FR/ST=Valdoise/L=Margency/O=Pineapple_inc/OU=IT/CN=localhost"
 #------------------------end
+
+RUN cp ./init_container/hosts /etc/
 
 ENTRYPOINT ["dumb-init", "--"]
 
