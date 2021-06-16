@@ -2,10 +2,10 @@
 
 #	move the dir to the right emplacement and delete .tar file
 
-tar -xzf ./latest.tar.gz -C /var/www/
+tar xzf ./latest.tar.gz -C /var/www/
 rm latest.tar.gz
 
-mv /init_container/wp-config.php /var/www/wordpress
+mv /init_conf/wp-config.php /var/www/wordpress
 chown -R www-data:www-data /var/www/wordpress/
 
 #	Set up daemonize to 'no' in the php-fpm.conf so i can run it properly after
@@ -16,5 +16,3 @@ sed -i -e "s|;daemonize = yes|daemonize = no|g" /etc/php/7.3/fpm/php-fpm.conf
 mkdir -p /run/php/
 
 exec /usr/sbin/php-fpm7.3
-
-echo "Hello from Wordpress\n"
