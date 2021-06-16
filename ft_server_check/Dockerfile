@@ -20,7 +20,7 @@ RUN wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.ta
 
 RUN wget https://wordpress.org/latest.tar.gz
 
-ADD conf/ init_c/
+ADD srcs/ init_c/
 
 ENV	AUTOINDEX=on;
 

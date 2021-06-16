@@ -9,7 +9,7 @@ services:
   restart: always
   env_file: .env
   volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_data_bis:/var/lib/mysql
   networks:
       -  inception_network
  
@@ -22,7 +22,7 @@ services:
   restart: always
   env_file: .env
   volumes:
-      - wp_data:/var/www/
+      - wp_data_bis:/var/www/
   networks:
       - inception_network
 
@@ -38,21 +38,22 @@ services:
   networks:
       -  inception_network
   volumes:
-      - wp_data:/var/www/
+      - wp_data_bis:/var/www/
 
 volumes:
- wp_data:
+ wp_data_bis:
      driver: local
      driver_opts:
          type: 'none'
          o: 'bind'
-         device: '/Users/jacher/data/wp_data'
- mariadb_data:
+         device: '/Users/jacher/data_bis/wp_data_bis'
+      
+ mariadb_data_bis:
      driver: local
      driver_opts:
          type: 'none'
          o: 'bind'
-         device: '/Users/jacher/data/mariadb_data'
+         device: '/Users/jacher/data_bis/mariadb_data_bis'
      
 networks:
  inception_network:
