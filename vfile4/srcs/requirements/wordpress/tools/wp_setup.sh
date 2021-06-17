@@ -1,7 +1,6 @@
 #!bin/bash
 
 #	move the dir to the right emplacement and delete .tar file
-
 tar xzf ./latest.tar.gz -C /var/www/
 rm latest.tar.gz
 

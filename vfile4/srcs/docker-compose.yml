@@ -4,12 +4,12 @@ services:
  
  mariadb-service:
   build: ./requirements/mariadb
-  image: my-mariadb-image
+  image: mariadb-image
   container_name: mariadb
   restart: always
   env_file: .env
   volumes:
-      - mariadb_data_bis:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
   networks:
       -  inception_network
  
@@ -17,12 +17,12 @@ services:
   depends_on:
       - mariadb-service
   build: ./requirements/wordpress
-  image: my-wordpress-image
+  image: wordpress-image
   container_name: wordpress
   restart: always
   env_file: .env
   volumes:
-      - wp_data_bis:/var/www/
+      - wp_data:/var/www/
   networks:
       - inception_network
 
@@ -30,7 +30,7 @@ services:
   depends_on:
       - wordpress-service
   build: ./requirements/nginx
-  image: my-nginx-image
+  image: nginx-image
   container_name: nginx
   restart: always
   ports:
@@ -38,22 +38,22 @@ services:
   networks:
       -  inception_network
   volumes:
-      - wp_data_bis:/var/www/
+      - wp_data:/var/www/
 
 volumes:
- wp_data_bis:
+ wp_data:
      driver: local
      driver_opts:
          type: 'none'
          o: 'bind'
-         device: '/Users/jacher/data_bis/wp_data_bis'
+         device: '/home/jacher/data/wp_data'
       
- mariadb_data_bis:
+ mariadb_data:
      driver: local
      driver_opts:
          type: 'none'
          o: 'bind'
-         device: '/Users/jacher/data_bis/mariadb_data_bis'
+         device: '/home/jacher/data/mariadb_data'
      
 networks:
  inception_network:
